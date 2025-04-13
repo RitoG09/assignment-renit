@@ -21,7 +21,7 @@ function Availability() {
 
   const handleSave = async () => {
     try {
-      const res = await fetch("http://localhost:8000/availability", {
+      const res = await fetch("https://assignment-renit-backend.onrender.com", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ unavailableDates: dateRanges }),

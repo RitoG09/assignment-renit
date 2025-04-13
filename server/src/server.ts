@@ -2,7 +2,7 @@ import express, { Application, Request, Response } from "express";
 import "dotenv/config";
 import prisma from "./config/db.js";
 import cors from "cors";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 
 const app: Application = express();
 
@@ -12,6 +12,7 @@ app.use(
     origin: "https://assignment-renit.onrender.com",
     methods: ["GET", "POST", "DELETE", "PUT"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
   })
 );
 
@@ -24,15 +25,30 @@ app.post("/availability", async (req: Request, res: Response) => {
     const { unavailableDates } = req.body;
 
     const formattedDates = unavailableDates.flatMap((range: any) => {
+      // Create date objects and ensure they're treated as UTC dates
       const startDate = new Date(range.startDate);
       const endDate = new Date(range.endDate);
+
+      console.log("Processing date range:", {
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString(),
+      });
+
       const dates = [];
 
+      // Clone start date to avoid modifying the original
       let currentDate = new Date(startDate);
+
+      // Loop through each day in the range
       while (currentDate <= endDate) {
+        // Format the date in a locale-independent way
         const formattedDate = format(currentDate, "dd MMMM yyyy");
         dates.push(formattedDate);
-        currentDate.setDate(currentDate.getDate() + 1);
+
+        // Move to next day
+        const nextDay = new Date(currentDate);
+        nextDay.setDate(nextDay.getDate() + 1);
+        currentDate = nextDay;
       }
 
       return dates;

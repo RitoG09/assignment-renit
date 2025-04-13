@@ -21,12 +21,27 @@ function Availability() {
 
   const handleSave = async () => {
     try {
+      // Create a copy of date ranges with timezone correction
+      const DateRanges = dateRanges.map((range) => {
+        // Create new Date objects with the date parts only
+        const startDate = new Date(range.startDate);
+        startDate.setHours(12, 0, 0, 0); 
+
+        const endDate = new Date(range.endDate);
+        endDate.setHours(12, 0, 0, 0); 
+
+        return {
+          startDate,
+          endDate,
+        };
+      });
+
       const res = await fetch(
         "https://assignment-renit-backend.onrender.com/availability",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ unavailableDates: dateRanges }),
+          body: JSON.stringify({ unavailableDates: DateRanges }),
         }
       );
 

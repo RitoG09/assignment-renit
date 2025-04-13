@@ -126,6 +126,10 @@ const config = {
         "fromEnvVar": null,
         "value": "windows",
         "native": true
+      },
+      {
+        "fromEnvVar": null,
+        "value": "debian-openssl-3.0.x"
       }
     ],
     "previewFeatures": [],
@@ -143,16 +147,17 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": "postgresql://neondb_owner:npg_0y5GQCVFaXON@ep-floral-firefly-a5moh3rd-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require"
+        "value": null
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Availability {\n  id        Int      @id @default(autoincrement())\n  dates     String[] // Storing multiple unavailable dates as formatted strings\n  createdAt DateTime @default(now())\n}\n",
-  "inlineSchemaHash": "86c53ad5d1ab2d8abb03b1169799e821c8b4de803d325a2e96bc823801bdb7ac",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider      = \"prisma-client-js\"\n  output        = \"../src/generated/prisma\"\n  binaryTargets = [\"native\", \"debian-openssl-3.0.x\"]\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Availability {\n  id        Int      @id @default(autoincrement())\n  dates     String[] // Storing multiple unavailable dates as formatted strings\n  createdAt DateTime @default(now())\n}\n",
+  "inlineSchemaHash": "9c80a98e7053e6ede0dd83d6fedd14ff01212dff3a65a50ab7506a815d8c7887",
   "copyEngine": true
 }
 config.dirname = '/'

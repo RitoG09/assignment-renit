@@ -5,8 +5,9 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  provider      = "prisma-client-js"
+  output        = "../src/generated/prisma"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {
@@ -15,7 +16,7 @@ datasource db {
 }
 
 model Availability {
-  id        Int        @id @default(autoincrement())
-  dates     DateTime[] // Storing multiple unavailable dates
-  createdAt DateTime   @default(now())
+  id        Int      @id @default(autoincrement())
+  dates     String[] // Storing multiple unavailable dates as formatted strings
+  createdAt DateTime @default(now())
 }

@@ -11,7 +11,9 @@ export default function SavedPage() {
     const fetchSavedDates = async () => {
       try {
         setLoading(true);
-        const res = await fetch("http://localhost:8000/availability");
+        const res = await fetch(
+          "https://assignment-renit-backend.onrender.com/availability"
+        );
 
         if (!res.ok) {
           throw new Error("Failed to fetch saved dates");

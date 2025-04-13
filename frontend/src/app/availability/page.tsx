@@ -21,11 +21,14 @@ function Availability() {
 
   const handleSave = async () => {
     try {
-      const res = await fetch("https://assignment-renit-backend.onrender.com", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ unavailableDates: dateRanges }),
-      });
+      const res = await fetch(
+        "https://assignment-renit-backend.onrender.com/availability",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ unavailableDates: dateRanges }),
+        }
+      );
 
       const data = await res.json();
       console.log("Response:", data);

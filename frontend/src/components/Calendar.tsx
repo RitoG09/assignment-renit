@@ -61,7 +61,6 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
       const updatedRanges = [...dateRanges, newRange];
       setDateRanges(updatedRanges);
 
-      // Call the onDateSelect callback with the updated ranges
       if (onDateSelect) {
         onDateSelect(updatedRanges);
       }
@@ -72,12 +71,10 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
     const updatedRanges = dateRanges.filter((_, i) => i !== index);
     setDateRanges(updatedRanges);
 
-    // Reset the selection state
     setSelectedFirstDate(null);
     setSelectedLastDate(null);
     setIsSelectingRange(false);
 
-    // Call the onDateSelect callback with the updated ranges
     if (onDateSelect) {
       onDateSelect(updatedRanges);
     }
@@ -85,7 +82,6 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
 
   // Check if a date is within any of the selected ranges
   const isDateInRange = (day: Date) => {
-    // Check current selection
     if (isSelectingRange && selectedFirstDate) {
       if (isSameDay(day, selectedFirstDate)) return true;
     }
@@ -112,7 +108,6 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
 
   // Check if a date is an intermediate date (not first or last)
   const isIntermediateDate = (day: Date) => {
-    // Check temporary selection
     if (selectedFirstDate && selectedLastDate) {
       if (isAfter(day, selectedFirstDate) && isBefore(day, selectedLastDate)) {
         return true;
@@ -171,7 +166,6 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
   const renderCells = () => {
     const monthStart = startOfMonth(currentMonth);
     const monthEnd = endOfMonth(monthStart);
-    // Start from Monday (1) instead of Sunday (0)
     const startDate = startOfWeek(monthStart, { weekStartsOn: 1 });
     const endDate = endOfWeek(monthEnd, { weekStartsOn: 1 });
 
@@ -192,7 +186,7 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
             dateRanges.some((range) => isSameDay(day, range.endDate));
           const isTodayDate = isToday(day);
 
-          // Get appropriate styling based on selection state
+          // Styling part of calender date
           let bgColorClass = "";
           if (isStartDate || isEndDate) {
             bgColorClass = "bg-red-500 text-white";

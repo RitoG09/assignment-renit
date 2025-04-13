@@ -4,12 +4,12 @@ import prisma from "./config/db.js";
 import cors from "cors";
 import { format } from "date-fns";
 const app = express();
-const allowedOrigins = [
-    "http://localhost:3000", // For local dev
-    "https://assignment-renit.onrender.com", // For deployed frontend
-];
+// const allowedOrigins = [
+//   "http://localhost:3000", // For local dev
+//   "https://assignment-renit.onrender.com", // For deployed frontend
+// ];
 app.use(cors({
-    origin: allowedOrigins,
+    origin: "https://assignment-renit.onrender.com",
     methods: ["GET", "POST", "DELETE", "PUT"],
     allowedHeaders: ["Content-Type", "Authorization"],
 }));

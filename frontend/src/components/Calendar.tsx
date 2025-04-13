@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   format,
   startOfMonth,
@@ -81,30 +81,30 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
   };
 
   // Check if a date is within any of the selected ranges
-  const isDateInRange = (day: Date) => {
-    if (isSelectingRange && selectedFirstDate) {
-      if (isSameDay(day, selectedFirstDate)) return true;
-    }
+  // const isDateInRange = (day: Date) => {
+  //   if (isSelectingRange && selectedFirstDate) {
+  //     if (isSameDay(day, selectedFirstDate)) return true;
+  //   }
 
-    // Check temporary complete selection
-    if (selectedFirstDate && selectedLastDate) {
-      if (
-        isSameDay(day, selectedFirstDate) ||
-        isSameDay(day, selectedLastDate) ||
-        (isAfter(day, selectedFirstDate) && isBefore(day, selectedLastDate))
-      ) {
-        return true;
-      }
-    }
+  //   // Check temporary complete selection
+  //   if (selectedFirstDate && selectedLastDate) {
+  //     if (
+  //       isSameDay(day, selectedFirstDate) ||
+  //       isSameDay(day, selectedLastDate) ||
+  //       (isAfter(day, selectedFirstDate) && isBefore(day, selectedLastDate))
+  //     ) {
+  //       return true;
+  //     }
+  //   }
 
-    // Check saved ranges
-    return dateRanges.some(
-      (range) =>
-        isSameDay(day, range.startDate) ||
-        isSameDay(day, range.endDate) ||
-        (isAfter(day, range.startDate) && isBefore(day, range.endDate))
-    );
-  };
+  //   // Check saved ranges
+  //   return dateRanges.some(
+  //     (range) =>
+  //       isSameDay(day, range.startDate) ||
+  //       isSameDay(day, range.endDate) ||
+  //       (isAfter(day, range.startDate) && isBefore(day, range.endDate))
+  //   );
+  // };
 
   // Check if a date is an intermediate date (not first or last)
   const isIntermediateDate = (day: Date) => {
@@ -184,7 +184,6 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
           const isEndDate =
             (selectedLastDate && isSameDay(day, selectedLastDate)) ||
             dateRanges.some((range) => isSameDay(day, range.endDate));
-          const isTodayDate = isToday(day);
 
           // Styling part of calender date
           let bgColorClass = "";

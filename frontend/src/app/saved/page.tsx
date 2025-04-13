@@ -2,6 +2,10 @@
 
 import React, { useEffect, useState } from "react";
 
+interface Availability {
+  dates: string[];
+}
+
 export default function SavedPage() {
   const [savedDates, setSavedDates] = useState<string[][]>([]);
   const [loading, setLoading] = useState(true);
@@ -20,7 +24,9 @@ export default function SavedPage() {
         }
 
         const data = await res.json();
-        setSavedDates(data.availabilities.map((item: any) => item.dates));
+        setSavedDates(
+          data.availabilities.map((item: Availability) => item.dates)
+        );
       } catch (err) {
         console.error("Error fetching saved dates:", err);
         setError("Failed to load saved dates");

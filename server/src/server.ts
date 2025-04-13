@@ -6,26 +6,12 @@ import { format } from "date-fns";
 
 const app: Application = express();
 
-const allowedOrigins = [
-  "http://localhost:3000", // For local dev
-  "https://assignment-renit.onrender.com", // For deployed frontend
-];
-
+// Simple CORS setup with explicit origin
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // Allow requests with no origin (like mobile apps or curl requests)
-      if (!origin) return callback(null, true);
-
-      if (allowedOrigins.indexOf(origin) !== -1) {
-        return callback(null, true);
-      } else {
-        return callback(null, false);
-      }
-    },
+    origin: "https://assignment-renit.onrender.com",
     methods: ["GET", "POST", "DELETE", "PUT"],
     allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
   })
 );
 

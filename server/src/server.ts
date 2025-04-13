@@ -6,9 +6,14 @@ import { format } from "date-fns";
 
 const app: Application = express();
 
+const allowedOrigins = [
+  "http://localhost:3000", // For local dev
+  "https://assignment-renit.onrender.com", // For deployed frontend
+];
+
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: allowedOrigins,
     methods: ["GET", "POST", "DELETE", "PUT"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })

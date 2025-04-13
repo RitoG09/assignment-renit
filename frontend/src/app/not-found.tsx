@@ -6,7 +6,7 @@ export default function NotFound() {
   return (
     <div className="h-screen flex justify-center items-center flex-col">
       <Image
-        src="https://assignment-renit.onrender.com/404.jpg"
+        src="/404.jpg"
         width={500}
         height={500}
         alt="404"

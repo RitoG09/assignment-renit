@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Calendar from "@/components/Calendar";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 
 interface DateRange {
@@ -13,6 +13,7 @@ interface DateRange {
 
 function Availability() {
   const [dateRanges, setDateRanges] = useState<DateRange[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const handleDateSelect = (ranges: DateRange[]) => {
     setDateRanges(ranges);
@@ -21,6 +22,7 @@ function Availability() {
 
   const handleSave = async () => {
     try {
+      setLoading(true);
       // Create a copy of date ranges with timezone correction
       const DateRanges = dateRanges.map((range) => {
         // Create new Date objects with the date parts only
@@ -48,11 +50,10 @@ function Availability() {
       const data = await res.json();
       console.log("Response:", data);
       toast.success("Availability Stored in DB!", { duration: 5000 });
-
-      // Navigate or show success message here
     } catch (error) {
       console.error("Error saving availability:", error);
-      // Show error message to user
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -90,12 +91,19 @@ function Availability() {
             Add date log
           </Button>
           <Button
-            className="py-2 sm:py-7 px-4 sm:px-20 text-sm sm:text-lg font-medium sm:font-semibold bg-indigo-500 hover:bg-indigo-600 rounded-xl sm:rounded-2xl w-full sm:w-auto"
+            className="py-2 sm:py-7 px-4 sm:px-20 text-sm sm:text-lg font-medium sm:font-semibold bg-indigo-500 hover:bg-indigo-600 rounded-xl sm:rounded-2xl w-full sm:w-auto cursor-pointer"
             onClick={handleSave}
+            disabled={loading}
           >
             <div className="flex justify-center items-center gap-2 sm:gap-3">
-              <span>Next</span>
-              <ArrowRight size={16} className="sm:size-6" />
+              {loading ? (
+                <Loader2 className="animate-spin sm:size-6" />
+              ) : (
+                <>
+                  <span>Next</span>
+                  <ArrowRight size={16} className="sm:size-6" />
+                </>
+              )}
             </div>
           </Button>
         </div>

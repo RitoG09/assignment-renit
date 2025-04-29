@@ -18,6 +18,7 @@ import {
 } from "date-fns";
 import { Button } from "./ui/button";
 import { ArrowLeft, ArrowRight, X } from "lucide-react";
+import toast from "react-hot-toast";
 
 interface DateRange {
   startDate: Date;
@@ -35,31 +36,54 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
   const [isSelectingRange, setIsSelectingRange] = useState(false);
   const [dateRanges, setDateRanges] = useState<DateRange[]>([]);
 
+  // Dates blocking mech
+  const isRangeOverlap = (
+    startA: Date,
+    endA: Date,
+    startB: Date,
+    endB: Date
+  ) => {
+    return (
+      isSameDay(startA, startB) ||
+      isSameDay(endA, endB) ||
+      (isBefore(startA, endB) && isAfter(endA, startB)) ||
+      (isBefore(startB, endA) && isAfter(endB, startA)) ||
+      isSameDay(startA, endB) ||
+      isSameDay(endA, startB) ||
+      isSameDay(startA, endB) ||
+      isSameDay(endA, startB)
+    );
+  };
+
   const handleDateClick = (day: Date) => {
     if (!isSelectingRange) {
-      // Start selecting range
       setSelectedFirstDate(day);
       setSelectedLastDate(null);
       setIsSelectingRange(true);
     } else {
-      // Complete range selection
       let start = selectedFirstDate!;
       let end = day;
-
-      // Ensure first date is before last date
       if (isBefore(day, selectedFirstDate!)) {
         end = selectedFirstDate!;
         start = day;
       }
 
+      const overlap = dateRanges.some((range) =>
+        isRangeOverlap(start, end, range.startDate, range.endDate)
+      );
+      if (overlap) {
+        toast.error("Product is unavailable for these dates");
+        setIsSelectingRange(false);
+        setSelectedFirstDate(null);
+        setSelectedLastDate(null);
+        return;
+      }
+
       setSelectedLastDate(end);
       setIsSelectingRange(false);
-
-      // Add the new date range
       const newRange = { startDate: start, endDate: end };
       const updatedRanges = [...dateRanges, newRange];
       setDateRanges(updatedRanges);
-
       if (onDateSelect) {
         onDateSelect(updatedRanges);
       }
@@ -100,7 +124,11 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
           onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
           variant="ghost"
           size="sm"
-          className="cursor-pointer sm:size-lg"
+          className="
+            py-5 px-8 text-lg
+            md:py-3 md:px-6 md:text-base
+            cursor-pointer sm:size-lg
+          "
         >
           <ArrowLeft size={18} className="sm:size-5" />
         </Button>
@@ -111,7 +139,11 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
           onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
           variant="ghost"
           size="sm"
-          className="cursor-pointer sm:size-lg"
+          className="
+            py-5 px-8 text-lg
+            md:py-3 md:px-6 md:text-base
+            cursor-pointer sm:size-lg
+          "
         >
           <ArrowRight size={18} className="sm:size-5" />
         </Button>
@@ -228,10 +260,10 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-2 w-6 p-0 min-w-6 min-h-6"
+                className="py-5 px-8 text-lg md:py-3 md:px-6 md:text-base h-6 w-6 p-0 min-w-6 min-h-6"
                 onClick={() => removeRange(index)}
               >
-                <X size={5} className="sm:size-20" />
+                <X className="w-5 h-5 sm:w-10 sm:h-10" />
               </Button>
             </li>
           ))}

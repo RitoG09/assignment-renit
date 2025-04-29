@@ -79,32 +79,6 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
     }
   };
 
-  // Check if a date is within any of the selected ranges
-  // const isDateInRange = (day: Date) => {
-  //   if (isSelectingRange && selectedFirstDate) {
-  //     if (isSameDay(day, selectedFirstDate)) return true;
-  //   }
-
-  //   // Check temporary complete selection
-  //   if (selectedFirstDate && selectedLastDate) {
-  //     if (
-  //       isSameDay(day, selectedFirstDate) ||
-  //       isSameDay(day, selectedLastDate) ||
-  //       (isAfter(day, selectedFirstDate) && isBefore(day, selectedLastDate))
-  //     ) {
-  //       return true;
-  //     }
-  //   }
-
-  //   // Check saved ranges
-  //   return dateRanges.some(
-  //     (range) =>
-  //       isSameDay(day, range.startDate) ||
-  //       isSameDay(day, range.endDate) ||
-  //       (isAfter(day, range.startDate) && isBefore(day, range.endDate))
-  //   );
-  // };
-
   // Check if a date is an intermediate date (not first or last)
   const isIntermediateDate = (day: Date) => {
     if (selectedFirstDate && selectedLastDate) {
@@ -121,25 +95,25 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
 
   const renderHeader = () => {
     return (
-      <div className="flex justify-between items-center mb-4 border-b-2">
+      <div className="flex justify-between items-center mb-2 sm:mb-4 border-b-2">
         <Button
           onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
           variant="ghost"
-          size="lg"
-          className="cursor-pointer"
+          size="sm"
+          className="cursor-pointer sm:size-lg"
         >
-          <ArrowLeft />
+          <ArrowLeft size={18} className="sm:size-5" />
         </Button>
-        <h2 className="text-2xl font-medium text-gray-500">
+        <h2 className="text-lg sm:text-2xl font-medium text-gray-500">
           {format(currentMonth, "MMMM yyyy")}
         </h2>
         <Button
           onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
           variant="ghost"
-          size="lg"
-          className="cursor-pointer"
+          size="sm"
+          className="cursor-pointer sm:size-lg"
         >
-          <ArrowRight />
+          <ArrowRight size={18} className="sm:size-5" />
         </Button>
       </div>
     );
@@ -147,15 +121,17 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
 
   const renderDays = () => {
     const days = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+    const shortDays = ["M", "T", "W", "T", "F", "S", "S"];
 
     return (
-      <div className="grid grid-cols-7 gap-2 mb-2">
-        {days.map((day) => (
+      <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-1 sm:mb-2">
+        {days.map((day, index) => (
           <div
             key={day}
-            className="text-center font-medium text-sm py-2 text-gray-700"
+            className="text-center font-medium text-xs sm:text-sm py-1 sm:py-2 text-gray-700"
           >
-            {day}
+            <span className="hidden sm:inline">{day}</span>
+            <span className="sm:hidden">{shortDays[index]}</span>
           </div>
         ))}
       </div>
@@ -174,7 +150,7 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
     });
 
     return (
-      <div className="grid grid-cols-7 gap-2">
+      <div className="grid grid-cols-7 gap-1 sm:gap-2">
         {dateRange.map((day, idx) => {
           const isCurrentMonth = isSameMonth(day, monthStart);
           const isStartDate =
@@ -184,7 +160,6 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
             (selectedLastDate && isSameDay(day, selectedLastDate)) ||
             dateRanges.some((range) => isSameDay(day, range.endDate));
 
-          // Styling part of calender date
           let bgColorClass = "";
           if (isStartDate || isEndDate) {
             bgColorClass = "bg-red-500 text-white";
@@ -196,14 +171,18 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
             <div
               key={idx}
               className={`
-                p-2 text-center cursor-pointer size-12 rounded-full
+                flex items-center justify-center
+                cursor-pointer rounded-full
+                min-w-8 min-h-8 w-full pb-[100%] relative
                 ${!isCurrentMonth ? "text-gray-400" : ""}
                 ${bgColorClass}
                 ${!bgColorClass ? "hover:bg-gray-100" : ""}
               `}
               onClick={() => handleDateClick(day)}
             >
-              <div>{format(day, "d")}</div>
+              <div className="absolute inset-0 flex items-center justify-center text-xs sm:text-sm">
+                {format(day, "d")}
+              </div>
             </div>
           );
         })}
@@ -223,24 +202,24 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
   const renderUnavailabilityList = () => {
     if (dateRanges.length === 0) {
       return (
-        <div className="text-gray-500 text-center mt-4">
+        <div className="text-gray-500 text-center mt-2 sm:mt-4 text-sm sm:text-base">
           No unavailable dates selected yet
         </div>
       );
     }
 
     return (
-      <div className="mt-2">
-        <h2 className="text-xl font-semibold mt-1 mb-1 text-center">
+      <div className="mt-2 sm:mt-4">
+        <h2 className="text-base sm:text-xl font-semibold mb-1 sm:mb-2 text-center">
           The product will be unavailable for {totalDays} Days
         </h2>
-        <ul className="space-y-2">
+        <ul className="space-y-1 sm:space-y-2">
           {dateRanges.map((range, index) => (
             <li
               key={index}
-              className="flex justify-between items-center p-2 bg-gray-100 rounded-lg"
+              className="flex justify-between items-center p-1 sm:p-2 bg-gray-100 rounded-lg text-xs sm:text-sm"
             >
-              <span className="text-sm">
+              <span>
                 {format(range.startDate, "MMM d")} -{" "}
                 {format(range.endDate, "MMM d")},{" "}
                 {format(range.startDate, "yyyy")}
@@ -249,10 +228,10 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-6 w-6 p-0"
+                className="h-2 w-6 p-0 min-w-6 min-h-6"
                 onClick={() => removeRange(index)}
               >
-                <X size={20} />
+                <X size={5} className="sm:size-20" />
               </Button>
             </li>
           ))}
@@ -262,15 +241,15 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto">
-      <div className="border-2 rounded-3xl pt-6 pb-6 pr-10 pl-10">
+    <div className="w-full px-2 sm:px-0 sm:max-w-md mx-auto">
+      <div className="border-2 rounded-xl sm:rounded-3xl p-3 sm:p-6 md:pt-6 md:pb-6 md:pr-10 md:pl-10">
         {renderHeader()}
         {renderDays()}
         {renderCells()}
       </div>
-      <div className="container mx-auto py-8">
+      <div className="px-2 sm:container mx-auto py-4 sm:py-8">
         {isSelectingRange && selectedFirstDate ? (
-          <div className="mt-4 text-sm text-center text-blue-500">
+          <div className="mt-2 sm:mt-4 text-xs sm:text-sm text-center text-blue-500">
             Select end date to complete the range
           </div>
         ) : null}

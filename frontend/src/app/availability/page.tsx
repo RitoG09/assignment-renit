@@ -25,10 +25,10 @@ function Availability() {
       const DateRanges = dateRanges.map((range) => {
         // Create new Date objects with the date parts only
         const startDate = new Date(range.startDate);
-        startDate.setHours(12, 0, 0, 0); 
+        startDate.setHours(12, 0, 0, 0);
 
         const endDate = new Date(range.endDate);
-        endDate.setHours(12, 0, 0, 0); 
+        endDate.setHours(12, 0, 0, 0);
 
         return {
           startDate,
@@ -57,21 +57,21 @@ function Availability() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="container max-w-2xl mx-auto py-8 px-4">
+    <div className="min-h-screen flex items-center justify-center pt-16 md:pt-0">
+      <div className="w-full max-w-2xl mx-auto py-4 sm:py-8 px-4">
         {/* {Header Section} */}
-        <h1 className="text-2xl font-bold mb-5 text-center">
+        <h1 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-5 text-center">
           Product Availability
         </h1>
 
         {/* Progress Bar */}
-        <div className="flex justify-center mb-6">
-          <div className="flex gap-2 w-50">
+        <div className="flex justify-center mb-4 sm:mb-6">
+          <div className="flex gap-1 sm:gap-2 w-full max-w-xs sm:max-w-sm">
             <div className="h-1 bg-indigo-500 rounded-2xl flex-1"></div>
             <div className="h-1 bg-indigo-500 rounded-2xl flex-1"></div>
             <div className="h-1 bg-indigo-500 rounded-2xl flex-1"></div>
             <div className="h-1 flex-1 relative">
-              <div className="absolute left-0 top-0 rounded-2xl  h-full w-1/2 bg-indigo-500"></div>
+              <div className="absolute left-0 top-0 rounded-2xl h-full w-1/2 bg-indigo-500"></div>
               <div className="absolute right-0 border rounded-2xl top-0 h-full w-1/2 bg-white"></div>
             </div>
             <div className="h-1 bg-white flex-1 border rounded-2xl border-gray-200"></div>
@@ -80,21 +80,22 @@ function Availability() {
 
         {/* {Calender Section} */}
         <Calendar onDateSelect={handleDateSelect} />
+
         {/* {Button section} */}
-        <div className="flex justify-center gap-5 mt-1">
+        <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-5 mt-4 sm:mt-6">
           <Button
             variant="outline"
-            className="py-7 px-15 cursor-pointer text-lg font-semibold rounded-2xl"
+            className="py-2 sm:py-7 px-4 sm:px-15 text-sm sm:text-lg font-medium sm:font-semibold rounded-xl sm:rounded-2xl w-full sm:w-auto"
           >
             Add date log
           </Button>
           <Button
-            className="py-7 px-20 cursor-pointer text-lg font-semibold bg-indigo-500 hover:bg-indigo-600 rounded-2xl"
+            className="py-2 sm:py-7 px-4 sm:px-20 text-sm sm:text-lg font-medium sm:font-semibold bg-indigo-500 hover:bg-indigo-600 rounded-xl sm:rounded-2xl w-full sm:w-auto"
             onClick={handleSave}
           >
-            <div className=" flex justify-center items-center gap-3">
+            <div className="flex justify-center items-center gap-2 sm:gap-3">
               <span>Next</span>
-              <ArrowRight />
+              <ArrowRight size={16} className="sm:size-6" />
             </div>
           </Button>
         </div>

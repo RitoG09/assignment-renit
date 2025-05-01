@@ -32,10 +32,12 @@ function Availability() {
     const savedRanges = localStorage.getItem("dateRanges");
     if (savedRanges) {
       try {
-        const parsedRanges = JSON.parse(savedRanges).map((range: any) => ({
-          startDate: new Date(range.startDate),
-          endDate: new Date(range.endDate),
-        }));
+        const parsedRanges = JSON.parse(savedRanges).map(
+          (range: DateRange) => ({
+            startDate: new Date(range.startDate),
+            endDate: new Date(range.endDate),
+          })
+        );
         setDateRanges(parsedRanges);
       } catch (error) {
         console.error("Error parsing saved date ranges:", error);

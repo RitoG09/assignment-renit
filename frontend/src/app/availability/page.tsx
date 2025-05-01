@@ -151,17 +151,17 @@ function Availability() {
         </div>
       </div>
       {/* {Button section}*/}
-      <div className="flex flex-row justify-center gap-2 sm:gap-5 px-4 max-w-2xl mx-auto">
+      <div className="flex flex-row justify-center gap-4 sm:gap-5 px-4 max-w-2xl mx-auto">
         <Button
           variant="outline"
-          className={`py-1 sm:py-7 px-2 sm:px-15 text-xs sm:text-lg font-medium sm:font-semibold rounded-xl sm:rounded-2xl flex-1 sm:w-auto cursor-pointer ${poppins.className}`}
+          className={`py-1 sm:py-7 px-25 sm:px-15 text-xs sm:text-lg font-medium sm:font-semibold rounded-xl sm:rounded-2xl flex-1 sm:w-auto cursor-pointer ${poppins.className}`}
           onClick={handleAddDateLog}
           disabled={!currentSelection}
         >
           Add date log
         </Button>
         <Button
-          className={`py-1 sm:py-7 px-2 sm:px-15 text-xs sm:text-lg font-medium sm:font-semibold bg-indigo-500 hover:bg-indigo-600 rounded-xl sm:rounded-2xl flex-1 sm:w-auto cursor-pointer ${poppins.className}`}
+          className={`py-1 sm:py-7 px-25 sm:px-15 text-xs sm:text-lg font-medium sm:font-semibold bg-indigo-500 hover:bg-indigo-600 rounded-xl sm:rounded-2xl flex-1 sm:w-auto cursor-pointer ${poppins.className}`}
           onClick={handleSave}
           disabled={loading || dateRanges.length === 0}
         >

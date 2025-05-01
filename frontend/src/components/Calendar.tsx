@@ -1,7 +1,7 @@
 "use client";
 
 import { Poppins } from "next/font/google";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   format,
   startOfMonth,
@@ -34,20 +34,29 @@ interface DateRange {
 interface CalendarProps {
   onDateSelect?: (dateRanges: DateRange[]) => void;
   onRangeSelect?: (range: DateRange | null) => void;
+  initialDateRanges?: DateRange[];
 }
 
 const Calendar = React.forwardRef<
   { addCurrentSelection: () => boolean },
   CalendarProps
->(({ onDateSelect, onRangeSelect }, ref) => {
+>(({ onDateSelect, onRangeSelect, initialDateRanges }, ref) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedFirstDate, setSelectedFirstDate] = useState<Date | null>(null);
   const [selectedLastDate, setSelectedLastDate] = useState<Date | null>(null);
   const [isSelectingRange, setIsSelectingRange] = useState(false);
-  const [dateRanges, setDateRanges] = useState<DateRange[]>([]);
+  const [dateRanges, setDateRanges] = useState<DateRange[]>(
+    initialDateRanges || []
+  );
   const [currentSelection, setCurrentSelection] = useState<DateRange | null>(
     null
   );
+
+  useEffect(() => {
+    if (initialDateRanges) {
+      setDateRanges(initialDateRanges);
+    }
+  }, [initialDateRanges]);
 
   // Dates blocking mech
   const isRangeOverlap = (
@@ -335,19 +344,16 @@ const Calendar = React.forwardRef<
         {renderDays()}
         {renderCells()}
       </div>
-      <div className="px-2 sm:container mx-auto py-4 sm:py-8">
-        {/* {isSelectingRange && selectedFirstDate ? (
-          <div className="mt-2 sm:mt-4 text-xs sm:text-sm text-center text-blue-500">
-            Select end date to complete the range
-          </div>
-        ) : currentSelection ? (
-          <div className="mt-2 sm:mt-4 text-xs sm:text-sm text-center text-blue-500">
-            Click &quot;Add date log&quot; to save this range
-          </div>
-        ) : null} */}
-        {/* {renderUnavailabilityList()} */}
-        {/* Here's where we limit the height of the unavailability list */}
-        <div className="max-h-[20vh] overflow-y-auto">
+      <div
+        className={`px-2 sm:container mx-auto ${
+          dateRanges.length > 0 ? "py-4 sm:py-8" : "py-2 sm:py-4"
+        }`}
+      >
+        <div
+          className={`overflow-y-auto ${
+            dateRanges.length > 0 ? "max-h-[20vh]" : "max-h-fit"
+          }`}
+        >
           {renderUnavailabilityList()}
         </div>
       </div>

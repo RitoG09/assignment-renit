@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Calendar from "@/components/Calendar";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
@@ -28,8 +28,25 @@ function Availability() {
     null
   );
 
+  useEffect(() => {
+    const savedRanges = localStorage.getItem("dateRanges");
+    if (savedRanges) {
+      try {
+        const parsedRanges = JSON.parse(savedRanges).map((range: any) => ({
+          startDate: new Date(range.startDate),
+          endDate: new Date(range.endDate),
+        }));
+        setDateRanges(parsedRanges);
+      } catch (error) {
+        console.error("Error parsing saved date ranges:", error);
+      }
+    }
+  }, []);
+
   const handleDateSelect = (ranges: DateRange[]) => {
     setDateRanges(ranges);
+    // Save to localStorage whenever dates are updated
+    localStorage.setItem("dateRanges", JSON.stringify(ranges));
     console.log("Selected date ranges:", ranges);
   };
 
@@ -91,11 +108,10 @@ function Availability() {
   };
 
   return (
-    <div className="flex flex-col min-h-[calc(100vh-4rem)]">
-      {" "}
-      {/* Subtract navbar height */}
+    <div className="flex flex-col">
+      {/* Suavbar height */}
       <div className="flex-1">
-        <div className="w-full max-w-2xl mx-auto py-4 sm:py-8 px-4">
+        <div className="w-full max-w-2xl mx-auto py-2 sm:py-8 px-4">
           {/* {Header Section} */}
           <div>
             <Link href="https://assignment-renit.onrender.com/post">
@@ -128,10 +144,11 @@ function Availability() {
             onDateSelect={handleDateSelect}
             onRangeSelect={handleRangeSelect}
             ref={calendarRef}
+            initialDateRanges={dateRanges}
           />
         </div>
       </div>
-      {/* {Button section} - Fixed at bottom above navbar */}
+      {/* {Button section}*/}
       <div className="flex flex-row justify-center gap-2 sm:gap-5 px-4 max-w-2xl mx-auto">
         <Button
           variant="outline"

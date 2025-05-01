@@ -1,5 +1,6 @@
 "use client";
 
+import { Poppins } from "next/font/google";
 import React, { useState } from "react";
 import {
   format,
@@ -17,8 +18,13 @@ import {
   differenceInDays,
 } from "date-fns";
 import { Button } from "./ui/button";
-import { ArrowLeft, ArrowRight, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Dot, X } from "lucide-react";
 import toast from "react-hot-toast";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+});
 
 interface DateRange {
   startDate: Date;
@@ -27,14 +33,21 @@ interface DateRange {
 
 interface CalendarProps {
   onDateSelect?: (dateRanges: DateRange[]) => void;
+  onRangeSelect?: (range: DateRange | null) => void;
 }
 
-const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
+const Calendar = React.forwardRef<
+  { addCurrentSelection: () => boolean },
+  CalendarProps
+>(({ onDateSelect, onRangeSelect }, ref) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedFirstDate, setSelectedFirstDate] = useState<Date | null>(null);
   const [selectedLastDate, setSelectedLastDate] = useState<Date | null>(null);
   const [isSelectingRange, setIsSelectingRange] = useState(false);
   const [dateRanges, setDateRanges] = useState<DateRange[]>([]);
+  const [currentSelection, setCurrentSelection] = useState<DateRange | null>(
+    null
+  );
 
   // Dates blocking mech
   const isRangeOverlap = (
@@ -63,10 +76,13 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
     } else {
       let start = selectedFirstDate!;
       let end = day;
+
       if (isBefore(day, selectedFirstDate!)) {
         end = selectedFirstDate!;
         start = day;
       }
+      setSelectedFirstDate(start);
+      setSelectedLastDate(end);
 
       const overlap = dateRanges.some((range) =>
         isRangeOverlap(start, end, range.startDate, range.endDate)
@@ -81,13 +97,31 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
 
       setSelectedLastDate(end);
       setIsSelectingRange(false);
+
       const newRange = { startDate: start, endDate: end };
-      const updatedRanges = [...dateRanges, newRange];
+      setCurrentSelection(newRange);
+
+      if (onRangeSelect) {
+        onRangeSelect(newRange);
+      }
+    }
+  };
+
+  const addCurrentSelection = () => {
+    if (currentSelection) {
+      const updatedRanges = [...dateRanges, currentSelection];
       setDateRanges(updatedRanges);
+      setCurrentSelection(null);
+
+      setSelectedFirstDate(null);
+      setSelectedLastDate(null);
+
       if (onDateSelect) {
         onDateSelect(updatedRanges);
       }
+      return true;
     }
+    return false;
   };
 
   const removeRange = (index: number) => {
@@ -107,6 +141,16 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
   const isIntermediateDate = (day: Date) => {
     if (selectedFirstDate && selectedLastDate) {
       if (isAfter(day, selectedFirstDate) && isBefore(day, selectedLastDate)) {
+        return true;
+      }
+    }
+
+    // Check current active range being selected
+    if (currentSelection) {
+      if (
+        isAfter(day, currentSelection.startDate) &&
+        isBefore(day, currentSelection.endDate)
+      ) {
         return true;
       }
     }
@@ -132,7 +176,9 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
         >
           <ArrowLeft size={18} className="sm:size-5" />
         </Button>
-        <h2 className="text-lg sm:text-2xl font-medium text-gray-500">
+        <h2
+          className={`text-lg sm:text-2xl font-medium text-gray-500 mb-3 ${poppins.className}`}
+        >
           {format(currentMonth, "MMMM yyyy")}
         </h2>
         <Button
@@ -153,17 +199,17 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
 
   const renderDays = () => {
     const days = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
-    const shortDays = ["M", "T", "W", "T", "F", "S", "S"];
+    // const shortDays = ["M", "T", "W", "T", "F", "Sat", "Sun"];
 
     return (
       <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-1 sm:mb-2">
         {days.map((day, index) => (
           <div
             key={day}
-            className="text-center font-medium text-xs sm:text-sm py-1 sm:py-2 text-gray-700"
+            className={`text-center font-medium text-xs sm:text-sm py-1 sm:py-2 text-gray-700 ${poppins.className}`}
           >
-            <span className="hidden sm:inline">{day}</span>
-            <span className="sm:hidden">{shortDays[index]}</span>
+            <span className="">{day}</span>
+            {/* <span className="sm:hidden">{shortDays[index]}</span> */}
           </div>
         ))}
       </div>
@@ -196,7 +242,7 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
           if (isStartDate || isEndDate) {
             bgColorClass = "bg-red-500 text-white";
           } else if (isIntermediateDate(day)) {
-            bgColorClass = "bg-red-200";
+            bgColorClass = "bg-red-100 text-red-600";
           }
 
           return (
@@ -205,11 +251,11 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
               className={`
                 flex items-center justify-center
                 cursor-pointer rounded-full
-                min-w-8 min-h-8 w-full pb-[100%] relative
+                min-w-5 min-h-5 w-full pb-[100%] relative
                 ${!isCurrentMonth ? "text-gray-400" : ""}
                 ${bgColorClass}
                 ${!bgColorClass ? "hover:bg-gray-100" : ""}
-              `}
+              ${poppins.className}`}
               onClick={() => handleDateClick(day)}
             >
               <div className="absolute inset-0 flex items-center justify-center text-xs sm:text-sm">
@@ -242,20 +288,25 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
 
     return (
       <div className="mt-2 sm:mt-4">
-        <h2 className="text-base sm:text-xl font-semibold mb-1 sm:mb-2 text-center">
-          The product will be unavailable for {totalDays} Days
+        <h2
+          className={`text-base sm:text-xl font-[600] mb-1 sm:mb-2 text-center ${poppins.className}`}
+        >
+          The product will be unavailable for {totalDays} days
         </h2>
         <ul className="space-y-1 sm:space-y-2">
           {dateRanges.map((range, index) => (
             <li
               key={index}
-              className="flex justify-between items-center p-1 sm:p-2 bg-gray-100 rounded-lg text-xs sm:text-sm"
+              className={`flex justify-between items-center p-1 sm:p-2 rounded-lg text-xm sm:text-xm  text-gray-500 font-medium ${poppins.className}`}
             >
-              <span>
-                {format(range.startDate, "MMM d")} -{" "}
-                {format(range.endDate, "MMM d")},{" "}
-                {format(range.startDate, "yyyy")}
-              </span>
+              <div className="flex gap-1 items-center justify-center">
+                <Dot />
+                <span>
+                  {format(range.startDate, "MMM d")} -{" "}
+                  {format(range.endDate, "MMM d")},{" "}
+                  {format(range.startDate, "yyyy")}
+                </span>
+              </div>
 
               <Button
                 variant="ghost"
@@ -272,6 +323,10 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
     );
   };
 
+  React.useImperativeHandle(ref, () => ({
+    addCurrentSelection,
+  }));
+
   return (
     <div className="w-full px-2 sm:px-0 sm:max-w-md mx-auto">
       <div className="border-2 rounded-xl sm:rounded-3xl p-3 sm:p-6 md:pt-6 md:pb-6 md:pr-10 md:pl-10">
@@ -284,11 +339,15 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {
           <div className="mt-2 sm:mt-4 text-xs sm:text-sm text-center text-blue-500">
             Select end date to complete the range
           </div>
+        ) : currentSelection ? (
+          <div className="mt-2 sm:mt-4 text-xs sm:text-sm text-center text-blue-500">
+            Click "Add date log" to save this range
+          </div>
         ) : null}
         {renderUnavailabilityList()}
       </div>
     </div>
   );
-};
+});
 
 export default Calendar;

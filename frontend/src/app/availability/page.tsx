@@ -1,10 +1,17 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Calendar from "@/components/Calendar";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Loader2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
+import Link from "next/link";
+import { Poppins } from "next/font/google";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+});
 
 interface DateRange {
   startDate: Date;
@@ -14,10 +21,31 @@ interface DateRange {
 function Availability() {
   const [dateRanges, setDateRanges] = useState<DateRange[]>([]);
   const [loading, setLoading] = useState(false);
+  const [currentSelection, setCurrentSelection] = useState<DateRange | null>(
+    null
+  );
+  const calendarRef = useRef<{ addCurrentSelection: () => boolean } | null>(
+    null
+  );
 
   const handleDateSelect = (ranges: DateRange[]) => {
     setDateRanges(ranges);
     console.log("Selected date ranges:", ranges);
+  };
+
+  const handleRangeSelect = (range: DateRange | null) => {
+    setCurrentSelection(range);
+  };
+
+  const handleAddDateLog = () => {
+    if (calendarRef.current) {
+      const added = calendarRef.current.addCurrentSelection();
+      if (!added) {
+        toast.error("Please select a date range first");
+      } else {
+        setCurrentSelection(null);
+      }
+    }
   };
 
   const handleSave = async () => {
@@ -61,9 +89,17 @@ function Availability() {
     <div className="min-h-screen flex items-center justify-center pt-16 md:pt-0">
       <div className="w-full max-w-2xl mx-auto py-4 sm:py-8 px-4">
         {/* {Header Section} */}
-        <h1 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-5 text-center">
-          Product Availability
-        </h1>
+        <div>
+          <Link href="https://assignment-renit.onrender.com/post">
+            <ArrowLeft className="size-5 cursor-pointer " />
+          </Link>
+
+          <h1
+            className={`text-xl sm:text-2xl font-[600] mb-3 sm:mb-5 text-center ${poppins.className}`}
+          >
+            Product Availability
+          </h1>
+        </div>
 
         {/* Progress Bar */}
         <div className="flex justify-center mb-4 sm:mb-6">
@@ -80,28 +116,33 @@ function Availability() {
         </div>
 
         {/* {Calender Section} */}
-        <Calendar onDateSelect={handleDateSelect} />
-
+        <Calendar
+          onDateSelect={handleDateSelect}
+          onRangeSelect={handleRangeSelect}
+          ref={calendarRef}
+        />
         {/* {Button section} */}
-        <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-5 mt-4 sm:mt-6">
+        <div className="flex flex-row justify-center gap-2 sm:gap-5 mt-4 sm:mt-6">
           <Button
             variant="outline"
-            className="py-2 sm:py-7 px-4 sm:px-15 text-sm sm:text-lg font-medium sm:font-semibold rounded-xl sm:rounded-2xl w-full sm:w-auto"
+            className={`py-1 sm:py-7 px-2 sm:px-15 text-xs sm:text-lg font-medium sm:font-semibold rounded-xl sm:rounded-2xl flex-1 sm:w-auto cursor-pointer ${poppins.className}`}
+            onClick={handleAddDateLog}
+            disabled={!currentSelection}
           >
             Add date log
           </Button>
           <Button
-            className="py-2 sm:py-7 px-4 sm:px-20 text-sm sm:text-lg font-medium sm:font-semibold bg-indigo-500 hover:bg-indigo-600 rounded-xl sm:rounded-2xl w-full sm:w-auto cursor-pointer"
+            className={`py-1 sm:py-7 px-2 sm:px-15 text-xs sm:text-lg font-medium sm:font-semibold bg-indigo-500 hover:bg-indigo-600 rounded-xl sm:rounded-2xl flex-1 sm:w-auto cursor-pointer ${poppins.className}`}
             onClick={handleSave}
             disabled={loading}
           >
-            <div className="flex justify-center items-center gap-2 sm:gap-3">
+            <div className="flex justify-center items-center gap-1 sm:gap-3">
               {loading ? (
                 <Loader2 className="animate-spin sm:size-6" />
               ) : (
                 <>
                   <span>Next</span>
-                  <ArrowRight size={16} className="sm:size-6" />
+                  <ArrowRight size={14} className="sm:size-6" />
                 </>
               )}
             </div>

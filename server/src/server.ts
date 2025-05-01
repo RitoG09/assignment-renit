@@ -2,11 +2,11 @@ import express, { Application, Request, Response } from "express";
 import "dotenv/config";
 import prisma from "./config/db.js";
 import cors from "cors";
-import { format, parseISO } from "date-fns";
+import { format } from "date-fns";
 
 const app: Application = express();
 
-// Simple CORS setup with explicit origin
+//CORS setup
 app.use(
   cors({
     origin: "https://assignment-renit.onrender.com",
@@ -18,7 +18,7 @@ app.use(
 
 app.use(express.json());
 
-const PORT = process.env.PORT || 7000;
+const PORT = process.env.PORT;
 
 app.post("/availability", async (req: Request, res: Response) => {
   try {

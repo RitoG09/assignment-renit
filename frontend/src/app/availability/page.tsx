@@ -49,6 +49,11 @@ function Availability() {
   };
 
   const handleSave = async () => {
+    if (dateRanges.length === 0) {
+      // toast.error("Add date log first");
+      return;
+    }
+
     try {
       setLoading(true);
       // Create a copy of date ranges with timezone correction
@@ -134,7 +139,7 @@ function Availability() {
           <Button
             className={`py-1 sm:py-7 px-2 sm:px-15 text-xs sm:text-lg font-medium sm:font-semibold bg-indigo-500 hover:bg-indigo-600 rounded-xl sm:rounded-2xl flex-1 sm:w-auto cursor-pointer ${poppins.className}`}
             onClick={handleSave}
-            disabled={loading}
+            disabled={loading || dateRanges.length === 0}
           >
             <div className="flex justify-center items-center gap-1 sm:gap-3">
               {loading ? (

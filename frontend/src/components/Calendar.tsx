@@ -289,7 +289,7 @@ const Calendar = React.forwardRef<
     return (
       <div className="mt-2 sm:mt-4">
         <h2
-          className={`text-base sm:text-xl font-[600] mb-1 sm:mb-2 text-center ${poppins.className}`}
+          className={`text-base sm:text-xl font-[500] mb-1 sm:mb-2 text-center ${poppins.className}`}
         >
           The product will be unavailable for {totalDays} days
         </h2>

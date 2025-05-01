@@ -91,68 +91,72 @@ function Availability() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center pt-16 md:pt-0">
-      <div className="w-full max-w-2xl mx-auto py-4 sm:py-8 px-4">
-        {/* {Header Section} */}
-        <div>
-          <Link href="https://assignment-renit.onrender.com/post">
-            <ArrowLeft className="size-5 cursor-pointer " />
-          </Link>
+    <div className="flex flex-col min-h-[calc(100vh-4rem)]">
+      {" "}
+      {/* Subtract navbar height */}
+      <div className="flex-1">
+        <div className="w-full max-w-2xl mx-auto py-4 sm:py-8 px-4">
+          {/* {Header Section} */}
+          <div>
+            <Link href="https://assignment-renit.onrender.com/post">
+              <ArrowLeft className="size-5 cursor-pointer " />
+            </Link>
 
-          <h1
-            className={`text-xl sm:text-2xl font-[600] mb-3 sm:mb-5 text-center ${poppins.className}`}
-          >
-            Product Availability
-          </h1>
-        </div>
-
-        {/* Progress Bar */}
-        <div className="flex justify-center mb-4 sm:mb-6">
-          <div className="flex gap-1 sm:gap-2 w-full max-w-xs sm:max-w-sm">
-            <div className="h-1 bg-indigo-500 rounded-2xl flex-1"></div>
-            <div className="h-1 bg-indigo-500 rounded-2xl flex-1"></div>
-            <div className="h-1 bg-indigo-500 rounded-2xl flex-1"></div>
-            <div className="h-1 flex-1 relative">
-              <div className="absolute left-0 top-0 rounded-2xl h-full w-1/2 bg-indigo-500"></div>
-              <div className="absolute right-0 border rounded-2xl top-0 h-full w-1/2 bg-white"></div>
-            </div>
-            <div className="h-1 bg-white flex-1 border rounded-2xl border-gray-200"></div>
+            <h1
+              className={`text-xl sm:text-2xl font-[600] mb-3 sm:mb-5 text-center ${poppins.className}`}
+            >
+              Product Availability
+            </h1>
           </div>
-        </div>
 
-        {/* {Calender Section} */}
-        <Calendar
-          onDateSelect={handleDateSelect}
-          onRangeSelect={handleRangeSelect}
-          ref={calendarRef}
-        />
-        {/* {Button section} */}
-        <div className="flex flex-row justify-center gap-2 sm:gap-5 mt-4 sm:mt-6">
-          <Button
-            variant="outline"
-            className={`py-1 sm:py-7 px-2 sm:px-15 text-xs sm:text-lg font-medium sm:font-semibold rounded-xl sm:rounded-2xl flex-1 sm:w-auto cursor-pointer ${poppins.className}`}
-            onClick={handleAddDateLog}
-            disabled={!currentSelection}
-          >
-            Add date log
-          </Button>
-          <Button
-            className={`py-1 sm:py-7 px-2 sm:px-15 text-xs sm:text-lg font-medium sm:font-semibold bg-indigo-500 hover:bg-indigo-600 rounded-xl sm:rounded-2xl flex-1 sm:w-auto cursor-pointer ${poppins.className}`}
-            onClick={handleSave}
-            disabled={loading || dateRanges.length === 0}
-          >
-            <div className="flex justify-center items-center gap-1 sm:gap-3">
-              {loading ? (
-                <Loader2 className="animate-spin sm:size-6" />
-              ) : (
-                <>
-                  <span>Next</span>
-                  <ArrowRight size={14} className="sm:size-6" />
-                </>
-              )}
+          {/* Progress Bar */}
+          <div className="flex justify-center mb-4 sm:mb-6">
+            <div className="flex gap-1 sm:gap-2 w-full max-w-xs sm:max-w-sm">
+              <div className="h-1 bg-indigo-500 rounded-2xl flex-1"></div>
+              <div className="h-1 bg-indigo-500 rounded-2xl flex-1"></div>
+              <div className="h-1 bg-indigo-500 rounded-2xl flex-1"></div>
+              <div className="h-1 flex-1 relative">
+                <div className="absolute left-0 top-0 rounded-2xl h-full w-1/2 bg-indigo-500"></div>
+                <div className="absolute right-0 border rounded-2xl top-0 h-full w-1/2 bg-white"></div>
+              </div>
+              <div className="h-1 bg-white flex-1 border rounded-2xl border-gray-200"></div>
             </div>
-          </Button>
+          </div>
+
+          {/* {Calender Section} */}
+          <Calendar
+            onDateSelect={handleDateSelect}
+            onRangeSelect={handleRangeSelect}
+            ref={calendarRef}
+          />
         </div>
+      </div>
+      {/* {Button section} - Fixed at bottom above navbar */}
+      <div className="flex flex-row justify-center gap-2 sm:gap-5 px-4 max-w-2xl mx-auto">
+        <Button
+          variant="outline"
+          className={`py-1 sm:py-7 px-2 sm:px-15 text-xs sm:text-lg font-medium sm:font-semibold rounded-xl sm:rounded-2xl flex-1 sm:w-auto cursor-pointer ${poppins.className}`}
+          onClick={handleAddDateLog}
+          disabled={!currentSelection}
+        >
+          Add date log
+        </Button>
+        <Button
+          className={`py-1 sm:py-7 px-2 sm:px-15 text-xs sm:text-lg font-medium sm:font-semibold bg-indigo-500 hover:bg-indigo-600 rounded-xl sm:rounded-2xl flex-1 sm:w-auto cursor-pointer ${poppins.className}`}
+          onClick={handleSave}
+          disabled={loading || dateRanges.length === 0}
+        >
+          <div className="flex justify-center items-center gap-1 sm:gap-3">
+            {loading ? (
+              <Loader2 className="animate-spin sm:size-6" />
+            ) : (
+              <>
+                <span>Next</span>
+                <ArrowRight size={14} className="sm:size-6" />
+              </>
+            )}
+          </div>
+        </Button>
       </div>
     </div>
   );

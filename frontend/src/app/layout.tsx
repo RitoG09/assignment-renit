@@ -28,11 +28,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-indigo-50`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-indigo-50 flex flex-col h-screen`}
       >
         <Toaster position="top-center" />
-        <Navbar />
-        <div className="md:ml-64 min-h-screen">{children}</div>
+        {/* Main content area - scrollable, takes full height minus navbar height */}
+        <div className="flex-1 overflow-y-auto pb-16">{children}</div>
+        {/* Navbar - fixed at bottom */}
+        <div className="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-gray-200 z-50">
+          <Navbar />
+        </div>
       </body>
     </html>
   );

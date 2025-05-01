@@ -293,7 +293,8 @@ const Calendar = React.forwardRef<
         >
           The product will be unavailable for {totalDays} days
         </h2>
-        <ul className="space-y-1 sm:space-y-2">
+        {/* <ul className="space-y-1 sm:space-y-2 max-h-48 overflow-y-auto"> */}
+        <ul className="space-y-1 sm:space-y-2 max-h-48 overflow-y-auto">
           {dateRanges.map((range, index) => (
             <li
               key={index}
@@ -335,7 +336,7 @@ const Calendar = React.forwardRef<
         {renderCells()}
       </div>
       <div className="px-2 sm:container mx-auto py-4 sm:py-8">
-        {isSelectingRange && selectedFirstDate ? (
+        {/* {isSelectingRange && selectedFirstDate ? (
           <div className="mt-2 sm:mt-4 text-xs sm:text-sm text-center text-blue-500">
             Select end date to complete the range
           </div>
@@ -343,8 +344,12 @@ const Calendar = React.forwardRef<
           <div className="mt-2 sm:mt-4 text-xs sm:text-sm text-center text-blue-500">
             Click &quot;Add date log&quot; to save this range
           </div>
-        ) : null}
-        {renderUnavailabilityList()}
+        ) : null} */}
+        {/* {renderUnavailabilityList()} */}
+        {/* Here's where we limit the height of the unavailability list */}
+        <div className="max-h-[20vh] overflow-y-auto">
+          {renderUnavailabilityList()}
+        </div>
       </div>
     </div>
   );

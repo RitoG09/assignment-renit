@@ -203,7 +203,7 @@ const Calendar = React.forwardRef<
 
     return (
       <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-1 sm:mb-2">
-        {days.map((day, index) => (
+        {days.map((day) => (
           <div
             key={day}
             className={`text-center font-medium text-xs sm:text-sm py-1 sm:py-2 text-gray-700 ${poppins.className}`}
@@ -341,7 +341,7 @@ const Calendar = React.forwardRef<
           </div>
         ) : currentSelection ? (
           <div className="mt-2 sm:mt-4 text-xs sm:text-sm text-center text-blue-500">
-            Click "Add date log" to save this range
+            Click &quot;Add date log&quot; to save this range
           </div>
         ) : null}
         {renderUnavailabilityList()}
@@ -349,5 +349,7 @@ const Calendar = React.forwardRef<
     </div>
   );
 });
+
+Calendar.displayName = "Calendar";
 
 export default Calendar;
